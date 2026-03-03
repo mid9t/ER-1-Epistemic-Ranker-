@@ -4,14 +4,14 @@
 **Model**: Frozen bert-base-uncased + Evidential Brier head
 
 ## Final Metrics
-| Metric   |     Value |
-|:---------|----------:|
-| Accuracy | 0.885921  |
-| Brier    | 0.200133  |
-| ECE      | 0.132204  |
-| ERU      | 0.0783031 |
-| P-Disc   | 0.0791967 |
-| P-Disp   | 0         |
+| Metric   |    Value |
+|:---------|---------:|
+| Accuracy | 0.885921 |
+| Brier    | 0.271591 |
+| ECE      | 0.252426 |
+| ERU      | 0.149966 |
+| P-Disc   | 0.892018 |
+| P-Disp   | 0        |
 
 ## Visuals
 ![Training Curves](training_curves.png)
