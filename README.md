@@ -1,47 +1,62 @@
-# Phase 1 – UQ Sanity Check
+# Epistemic Ranker (public)
 
-## Goal
-Validate that a frozen `bert-base-uncased` backbone with an evidential (Dirichlet) head trained via Brier loss produces sensible uncertainty behavior.
+Public snapshot of **Milestone 1**: evidential BERT on CLINC150 (CE / EDL / DAEDL arms). Private experiment notebooks, CIFAR `DAEDL/` reference code, and training artifacts are not included.
 
-## Data
-- **In-distribution (clean):** AG News
-- **Out-of-distribution (OOD):** IMDB
 
-## Model
-- Frozen BERT encoder
-- Evidential head: linear → softplus → Dirichlet α
+Milestone 1: leak-free CLINC150 pipeline and three experiment arms
+(**CE**, **vanilla EDL**, **DAEDL-style density-scaled EDL**) with diagnostics
+that catch an inert density term.
 
-## What We Evaluate
-- **Accuracy**
-- **Brier Score**
-- **ECE (15 bins)**
-- **ERU (Mutual Information)**
-- **P-Disc (OOD AUROC)**
-- **P-Disp (Cohen’s d)**
+See [`bert_edl_clinc150_implementation_plan.md`](bert_edl_clinc150_implementation_plan.md)
+for the full design. Early-exit heads are deferred to Milestone 2.
 
-## Final Metrics
-| Metric   |    Value |
-|:---------|---------:|
-| Accuracy | 0.885921 |
-| Brier    | 0.271591 |
-| ECE      | 0.252426 |
-| ERU      | 0.149966 |
-| P-Disc   | 0.892018 |
-| P-Disp   | 0        |
+## Layout
 
-## Visuals
-![Training Curves](training_curves.png)
-![Reliability](reliability_diagram.png)
-![Entropy](entropy_distribution.png)
-![KL](kl_discrepancy.png)
-![Metrics](metrics_summary.png)
+```
+src/bert_daedl/          # package (data, model, losses, density, eval, train)
+scripts/run_experiment.py
+scripts/aggregate_results.py
+configs/default.yaml
+tests/
+DAEDL/                   # CIFAR reference — do not modify
+```
 
-## Outputs
-- Training curves
-- Reliability diagram
-- Entropy distribution
-- KL discrepancy
-- Metrics summary
+## Setup
 
-## Status
-All asserts passed.
+```bash
+# reuse the DAEDL venv, or create a fresh one
+uv venv .venv && uv pip install -r requirements.txt
+export PYTHONPATH=src
+```
+
+Local CLINC150 JSON is expected at `data/CLINC150/data_full.json`
+(fallback when HF `clinc_oos` is unavailable; `datasets>=3` drops script support).
+
+## Quick commands
+
+```bash
+make test                          # unit tests (excludes slow smoke)
+make ce SEED=0                     # CE baseline
+make edl SEED=0
+make daedl SEED=0 NORM=qsigmoid MODE=mul
+make seeds ARM=ce                  # seeds 0..4
+make aggregate
+```
+
+Or:
+
+```bash
+PYTHONPATH=src python scripts/run_experiment.py --arm ce --seed 0 --device mps
+```
+
+## Arms
+
+| Arm | Train loss | Scores |
+|-----|------------|--------|
+| `ce` | cross-entropy | msp, entropy, energy, neg_logp |
+| `edl` | EDL (EXP + KL anneal) | + vacuity, pred_entropy, mutual_info, … |
+| `daedl` | same weights as `edl` (post-hoc) | + `daedl_*` density-scaled scores |
+
+Selection uses `id_val` + `oos_val` only; test is touched once per chosen config.
+Every run writes `results/<arm>_seed<N>/results.json` and `diagnostics.json`
+(`density_effect: ACTIVE|INERT`).
