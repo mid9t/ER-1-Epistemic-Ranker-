@@ -1,0 +1,33 @@
+model_name: bert-base-uncased
+max_length: 64
+batch_size: 32
+eval_batch_size: 128
+num_workers: 4
+feat_dim: 256
+sn_bottleneck: true
+bottleneck_activation: none
+pooling: cls
+dropout: 0.1
+arm: edl
+epochs: 5
+lr_encoder: 2.0e-5
+lr_head: 1.0e-3
+weight_decay: 0.01
+warmup_frac: 0.1
+grad_clip: 1.0
+reg_param: 1.0e-3
+kl_anneal_epochs: 5
+alpha_eps: 1.0e-6
+logit_clamp: 15.0
+normalizer: qsigmoid
+combine_mode: mul
+lam: 5.0
+seed: 0
+device: cuda
+output_dir: results
+gda:
+  cov_mode: tied
+  pca_dim: 128
+  whiten: true
+  jitter_grid: [1.0e-6, 1.0e-5, 1.0e-4, 1.0e-3]
+  min_var: 1.0e-8

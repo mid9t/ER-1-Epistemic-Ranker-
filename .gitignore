@@ -24,6 +24,14 @@ env/
 # Data / outputs
 /data/
 notebooks/data/
+results/
+!results/.gitkeep
+
+# HuggingFace / model caches
+.cache/
+*.pt
+*.bin
+checkpoints/
 
 # OS
 .DS_Store

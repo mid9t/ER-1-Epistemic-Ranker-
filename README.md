@@ -1,35 +1,59 @@
-# Epistemic-Ranker
-This is a research project to investigate the usage of Evidential Deep Learning (EDL) in Early-Exit with Uncertainty Quantification.
+# Epistemic Ranker — Evidential BERT on CLINC150
 
-## Phase 1 — UQ sanity on controlled text classification
-### Goal: prove your EDL head + metrics behave sensibly.
-dataset: any stable text classification benchmark
-tests: 
-- inject label noise ⇒ U(alea)U should rise
-- domain shift (topic shift) ⇒ vacuity/density should rise
-- calibration curves vs accuracy
+Milestone 1: leak-free CLINC150 pipeline and three experiment arms
+(**CE**, **vanilla EDL**, **DAEDL-style density-scaled EDL**) with diagnostics
+that catch an inert density term.
 
-## Phase 2 — Pointwise relevance classification (IR-adjacent, simpler than ranking)
-### Dataset: MS MARCO passage relevance (or similar).
-- Train cross-encoder with EDL head at final layer only.
-- Validate:
-  - OOD slices (spam/gibberish) don’t look confident (this often fails without density/conflict features)
+See [`bert_edl_clinc150_implementation_plan.md`](bert_edl_clinc150_implementation_plan.md)
+for the full design. Early-exit heads are deferred to Milestone 2.
 
-## Phase 3 — Add early exits + teacher distillation
-- Add exit heads at 3/6/9 with the same EDL parameterization.
-- Train with:
-  - standard relevance loss at each exit
-  - distillation from layer-12 logits/scores (for monotonic consistency)
-- Collect offline Δℓ labels to train gℓ.
-  
-## Phase 4 — Robustness hardening (the “Truth Gap” phase)
-- Add density-aware feature/scaling
-- Add conflict-aware/stability features (light perturbations; optional metamorphic transforms if feasible)
-- Evaluate against adversarial lexical overlap and spam corpora.
+## Layout
 
-## Phase 5 — Ranking integration + compute policy eval
-- Move to pairwise/listwise training objective.
-- Evaluate:
-  - NDCG/MRR vs compute budget
-  - selective risk curves (quality vs “coverage”/exits)
-  - worst-case slices (gibberish / OOD / spam)
+```
+src/bert_daedl/          # package (data, model, losses, density, eval, train)
+scripts/run_experiment.py
+scripts/aggregate_results.py
+configs/default.yaml
+tests/
+DAEDL/                   # CIFAR reference — do not modify
+```
+
+## Setup
+
+```bash
+# reuse the DAEDL venv, or create a fresh one
+uv venv .venv && uv pip install -r requirements.txt
+export PYTHONPATH=src
+```
+
+Local CLINC150 JSON is expected at `data/CLINC150/data_full.json`
+(fallback when HF `clinc_oos` is unavailable; `datasets>=3` drops script support).
+
+## Quick commands
+
+```bash
+make test                          # unit tests (excludes slow smoke)
+make ce SEED=0                     # CE baseline
+make edl SEED=0
+make daedl SEED=0 NORM=qsigmoid MODE=mul
+make seeds ARM=ce                  # seeds 0..4
+make aggregate
+```
+
+Or:
+
+```bash
+PYTHONPATH=src python scripts/run_experiment.py --arm ce --seed 0 --device mps
+```
+
+## Arms
+
+| Arm | Train loss | Scores |
+|-----|------------|--------|
+| `ce` | cross-entropy | msp, entropy, energy, neg_logp |
+| `edl` | EDL (EXP + KL anneal) | + vacuity, pred_entropy, mutual_info, … |
+| `daedl` | same weights as `edl` (post-hoc) | + `daedl_*` density-scaled scores |
+
+Selection uses `id_val` + `oos_val` only; test is touched once per chosen config.
+Every run writes `results/<arm>_seed<N>/results.json` and `diagnostics.json`
+(`density_effect: ACTIVE|INERT`).
