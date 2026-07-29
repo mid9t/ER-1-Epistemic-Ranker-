@@ -7,7 +7,7 @@ Milestone 1: leak-free CLINC150 pipeline and three experiment arms
 (**CE**, **vanilla EDL**, **DAEDL-style density-scaled EDL**) with diagnostics
 that catch an inert density term.
 
-Check out [`bert_edl_clinc150_implementation_plan.md`](bert_edl_clinc150_implementation_plan)
+Check out [`bert_edl_clinc150_implementation_plan.md`](bert_edl_clinc150_implementation_plan.md)
 for the full design. Early-exit heads are deferred to Milestone 2.
 
 ## Layout
