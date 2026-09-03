@@ -9,6 +9,27 @@ that catch an inert density term.
 See [`bert_edl_clinc150_implementation_plan.md`](bert_edl_clinc150_implementation_plan.md)
 for the full design. Early-exit heads are deferred to Milestone 2.
 
+## Overview architecture
+
+Shared BERT encoder, spectrally-normalized bottleneck, then three arms
+(**CE**, **EDL**, **DAEDL**) on the same features and logits:
+
+![End-to-end CLINC150 BERT SN-EDL pipeline with CE, EDL, and DAEDL arms](figs/clinc150_bert_sn_edl_end_to_end_pipeline.png)
+
+CLINC150 text is tokenized and passed through BERT (`[CLS]` + dropout), an
+SN linear bottleneck \(768\to256\) producing features \(\mathbf{f}\), and a
+linear head \(256\to K\) producing logits \(\mathbf{z}\). ID loaders drive
+training; OOS loaders (label = \(-1\)) are used only at val/test. The arms
+then diverge:
+
+- **CE** trains with cross-entropy on \(\mathbf{z}\)
+- **EDL** maps logits to Dirichlet evidence \(\alpha = \varepsilon + \exp(z)\)
+- **DAEDL** reuses the EDL weights and scales evidence by a GDA density
+  \(\hat{p}(\mathbf{f})\) at inference
+
+Prediction is \(\hat{y} = \arg\max\); OOS scores use a single convention
+(higher = more OOS).
+
 ## The bug story, and what we found
 
 Density-aware evidential models (DAEDL) scale Dirichlet evidence by a
