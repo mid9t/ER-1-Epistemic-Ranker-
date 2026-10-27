@@ -55,6 +55,7 @@ class BertEvidentialClassifier(nn.Module):
         token_type_ids=None,
         return_features: bool = False,
         return_hidden_states: bool = False,
+        return_pooled: bool = False,
     ):
         out = self.encoder(
             input_ids=input_ids,
@@ -65,6 +66,8 @@ class BertEvidentialClassifier(nn.Module):
         pooled = self._pool(out.last_hidden_state, attention_mask)
         feats = self.act(self.bottleneck(self.dropout(pooled)))
         logits = self.classifier(feats)
+        if return_pooled:
+            return logits, feats, pooled
         if return_features:
             return logits, feats
         return logits

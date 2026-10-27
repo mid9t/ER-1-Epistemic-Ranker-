@@ -1,0 +1,123 @@
+{
+  "claims": {
+    "H1": {
+      "claim": "H1: score matching replicates",
+      "comparison": "CE energy \u2212 EDL vacuity",
+      "verdict": "inconclusive",
+      "delta": -0.004022355769230823,
+      "ci95": [
+        -0.008645988043447126,
+        0.0006012765049854801
+      ],
+      "ci90": [
+        -0.007902630292601355,
+        -0.00014208124586029052
+      ],
+      "se_combined": 0.0023590394061762995,
+      "source": "posthoc/all/bootstrap_full.csv"
+    },
+    "H2_full": {
+      "claim": "H2: multiplicative coupling gives no benefit (D_full)",
+      "comparison": "qsigmoid\u00d7mul \u2212 vacuity",
+      "verdict": "inconclusive",
+      "delta": -0.0025606730769230034,
+      "ci95": [
+        -0.0072440269299696835,
+        0.0021226807761236762
+      ],
+      "ci90": [
+        -0.006491067529190835,
+        0.0013697213753448277
+      ],
+      "se_combined": 0.0023895101593643443,
+      "ece_worse_seeds": 5,
+      "n_seeds": 5,
+      "source": "posthoc/all/bootstrap_full.csv"
+    },
+    "H2_port": {
+      "claim": "H2: multiplicative coupling gives no benefit (D_port)",
+      "comparison": "qsigmoid\u00d7mul \u2212 vacuity",
+      "verdict": "refuted",
+      "delta": 0.010505480769230835,
+      "ci95": [
+        0.006406778460665961,
+        0.014604183077795707
+      ],
+      "ci90": [
+        0.007065741360131744,
+        0.013945220178329925
+      ],
+      "se_combined": 0.002091213073757944,
+      "ece_worse_seeds": 5,
+      "n_seeds": 5,
+      "source": "posthoc/all/bootstrap_port.csv"
+    },
+    "positive": {
+      "claim": "Positive coupling result",
+      "comparison": "primary pick \u2212 vacuity and primary pick \u2212 density",
+      "verdict": "supported",
+      "vs_vacuity": {
+        "delta": 0.003542500000000137,
+        "ci95": [
+          0.0005036524611355601,
+          0.0065813475388647145
+        ],
+        "ci90": [
+          0.000992218752241931,
+          0.006092781247758344
+        ],
+        "se_combined": 0.0015504609078710726
+      },
+      "vs_density": {
+        "delta": 0.00956658653846163,
+        "ci95": [
+          0.005955356485407324,
+          0.013177816591515935
+        ],
+        "ci90": [
+          0.006535946742334733,
+          0.012597226334588527
+        ],
+        "se_combined": 0.0018424981691190386
+      },
+      "source": "posthoc/all/bootstrap_full.csv"
+    },
+    "H3": {
+      "claim": "H3: the density helps more on near-OOS",
+      "comparison": "DiD = (A \u2212 vacuity on ID-OOS) \u2212 (A \u2212 vacuity on OOD-OOS)",
+      "verdict": "inconclusive",
+      "a": 0.006081388888888895,
+      "b": 0.000800500000000004,
+      "delta": 0.0052808888888888905,
+      "ci95": [
+        -0.0005379701801081398,
+        0.01109974795788592
+      ],
+      "ci90": [
+        0.000397548419443834,
+        0.010164229358333946
+      ],
+      "se_combined": 0.002968860200950348,
+      "source": "posthoc/h3_did.csv"
+    }
+  },
+  "holm": {
+    "H1": {
+      "p": 0.9559104394608171,
+      "p_holm": 0.9559104394608171,
+      "reject": false
+    },
+    "positive": {
+      "p": 0.011162147967545999,
+      "p_holm": 0.033486443902638,
+      "reject": true
+    },
+    "H3": {
+      "p": 0.03763958319314287,
+      "p_holm": 0.07527916638628573,
+      "reject": false
+    }
+  },
+  "notes": [],
+  "rule": "Verdicts follow PREREGISTRATION.md section 2.3. Holm covers H1, H3, and the positive result only."
+}

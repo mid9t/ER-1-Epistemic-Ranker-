@@ -30,10 +30,17 @@ def _group_key(r: dict) -> tuple:
         r.get("arm", cfg.get("arm")),
         cfg.get("normalizer", ""),
         cfg.get("combine_mode", ""),
+        r.get("tag", cfg.get("tag", "")) or "",
     )
 
 
-def aggregate(root: Path) -> tuple[list[dict], str]:
+def _std(vals, ddof: int) -> float:
+    if len(vals) <= ddof:
+        return 0.0
+    return float(np.std(vals, ddof=ddof))
+
+
+def aggregate(root: Path, ddof: int = 1) -> tuple[list[dict], str]:
     runs = _load_runs(root)
     if not runs:
         return [], "_No results.json found._\n"
@@ -44,12 +51,12 @@ def aggregate(root: Path) -> tuple[list[dict], str]:
 
     rows = []
     md_lines = [
-        "| arm | normalizer | combine | n | in_scope_acc | primary auroc | primary fpr95 |",
-        "|---|---|---|---:|---:|---:|---:|",
+        "| arm | tag | normalizer | combine | n | in_scope_acc | primary auroc | primary fpr95 |",
+        "|---|---|---|---|---:|---:|---:|---:|",
     ]
 
     for key in sorted(groups):
-        arm, norm, mode = key
+        arm, norm, mode, tag = key
         group = groups[key]
         accs = [g["in_scope_acc"] for g in group]
         # pick a representative primary score from thresholded
@@ -65,20 +72,21 @@ def aggregate(root: Path) -> tuple[list[dict], str]:
         def fmt(vals):
             if not vals:
                 return ""
-            return f"{np.mean(vals):.4f}±{np.std(vals):.4f}"
+            return f"{np.mean(vals):.4f}±{_std(vals, ddof):.4f}"
 
         row = {
             "arm": arm,
+            "tag": tag,
             "normalizer": norm,
             "combine_mode": mode,
             "n_seeds": len(group),
             "in_scope_acc_mean": float(np.mean(accs)),
-            "in_scope_acc_std": float(np.std(accs)),
+            "in_scope_acc_std": _std(accs, ddof),
             "primary_score": primary,
             "primary_auroc_mean": float(np.mean(aurocs)) if aurocs else None,
-            "primary_auroc_std": float(np.std(aurocs)) if aurocs else None,
+            "primary_auroc_std": _std(aurocs, ddof) if aurocs else None,
             "primary_fpr95_mean": float(np.mean(fprs)) if fprs else None,
-            "primary_fpr95_std": float(np.std(fprs)) if fprs else None,
+            "primary_fpr95_std": _std(fprs, ddof) if fprs else None,
         }
         # flatten per-score aurocs across seeds
         score_names = sorted({s for g in group for s in g["per_score"]})
@@ -90,18 +98,18 @@ def aggregate(root: Path) -> tuple[list[dict], str]:
             ]
             if vals:
                 row[f"{sname}_auroc_mean"] = float(np.mean(vals))
-                row[f"{sname}_auroc_std"] = float(np.std(vals))
+                row[f"{sname}_auroc_std"] = _std(vals, ddof)
                 fvals = [
                     g["per_score"][sname]["fpr_at_95tpr"]
                     for g in group
                     if sname in g["per_score"]
                 ]
                 row[f"{sname}_fpr95_mean"] = float(np.mean(fvals))
-                row[f"{sname}_fpr95_std"] = float(np.std(fvals))
+                row[f"{sname}_fpr95_std"] = _std(fvals, ddof)
 
         rows.append(row)
         md_lines.append(
-            f"| {arm} | {norm or '-'} | {mode or '-'} | {len(group)} | "
+            f"| {arm} | {tag or '-'} | {norm or '-'} | {mode or '-'} | {len(group)} | "
             f"{fmt(accs)} | {fmt(aurocs)} | {fmt(fprs)} |"
         )
 
@@ -111,9 +119,10 @@ def aggregate(root: Path) -> tuple[list[dict], str]:
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("results_root", nargs="?", default="results")
+    p.add_argument("--ddof", type=int, default=1, choices=[0, 1])
     args = p.parse_args()
     root = Path(args.results_root)
-    rows, md = aggregate(root)
+    rows, md = aggregate(root, ddof=args.ddof)
     root.mkdir(parents=True, exist_ok=True)
     csv_path = root / "summary.csv"
     if rows:
@@ -121,6 +130,7 @@ def main():
         # put key columns first
         preferred = [
             "arm",
+            "tag",
             "normalizer",
             "combine_mode",
             "n_seeds",

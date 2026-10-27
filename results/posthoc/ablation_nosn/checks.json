@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "arm": "edl",
+      "seed": 0,
+      "tag": "nosn",
+      "spearman_vacuity_energy_clip": 0.9999999999999998,
+      "max_auroc_gap_vacuity_family": 0.0
+    },
+    {
+      "arm": "edl",
+      "seed": 1,
+      "tag": "nosn",
+      "spearman_vacuity_energy_clip": 0.9999999999999998,
+      "max_auroc_gap_vacuity_family": 0.0
+    },
+    {
+      "arm": "edl",
+      "seed": 2,
+      "tag": "nosn",
+      "spearman_vacuity_energy_clip": 0.9999999999999998,
+      "max_auroc_gap_vacuity_family": 0.0
+    }
+  ],
+  "spearman_vacuity_energy_clip_min": 0.9999999999999998,
+  "max_auroc_gap_vacuity_family": 0.0
+}

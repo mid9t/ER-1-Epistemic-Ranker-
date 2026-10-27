@@ -10,6 +10,8 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from scipy.linalg import solve_triangular
+
 from bert_daedl.config import GDAConfig
 from bert_daedl.density.gda import GaussianDensityModel
 
@@ -44,3 +46,16 @@ def test_gda_per_class_fits_pd():
     lp_ood = gda.marginal_log_prob(ood)
     assert lp_ood.mean() < lp_id.mean()
     assert len(gda.chol_) == 2
+
+
+def test_tied_fast_path_matches_per_class_loop():
+    X, y, _ood = _synth()
+    gda = GaussianDensityModel(GDAConfig(cov_mode="tied", pca_dim=8, whiten=True)).fit(X, y)
+    fast = gda.class_log_prob(X)
+    Z = gda._transform(X)
+    slow = np.empty_like(fast)
+    const = gda.k_ * np.log(2.0 * np.pi)
+    for i in range(len(gda.classes_)):
+        sol = solve_triangular(gda.chol_, (Z - gda.mu_[i]).T, lower=True)
+        slow[:, i] = -0.5 * (const + gda.logdet_ + np.sum(sol ** 2, axis=0))
+    np.testing.assert_allclose(fast, slow, atol=1e-12, rtol=1e-12)

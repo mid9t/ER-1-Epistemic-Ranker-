@@ -1,0 +1,148 @@
+{
+  "in_scope_acc": 0.8775,
+  "ece": 0.035853173032402985,
+  "per_score": {
+    "msp": {
+      "auroc": 0.9148538461538462,
+      "aupr": 0.9233640103715592,
+      "fpr_at_95tpr": 0.4145,
+      "err_auroc": 0.8291877434734579,
+      "err_aupr": 0.4681543880112254,
+      "succ_aupr": 0.9699925282669087
+    },
+    "entropy": {
+      "auroc": 0.9239100961538462,
+      "aupr": 0.9348513478662932,
+      "fpr_at_95tpr": 0.3915,
+      "err_auroc": 0.8248037676609106,
+      "err_aupr": 0.44541494835735573,
+      "succ_aupr": 0.9693763270474356
+    },
+    "energy": {
+      "auroc": 0.9316817307692306,
+      "aupr": 0.9420444060472875,
+      "fpr_at_95tpr": 0.332,
+      "err_auroc": 0.8049584278155706,
+      "err_aupr": 0.40664123993798185,
+      "succ_aupr": 0.9654145431339284
+    },
+    "vacuity": {
+      "auroc": 0.9316817307692307,
+      "aupr": 0.9420444060472875,
+      "fpr_at_95tpr": 0.332,
+      "err_auroc": 0.8049584278155706,
+      "err_aupr": 0.40664123993798185,
+      "succ_aupr": 0.9654145431339284
+    },
+    "one_minus_maxpbar": {
+      "auroc": 0.9148538461538462,
+      "aupr": 0.9233640179798712,
+      "fpr_at_95tpr": 0.4145,
+      "err_auroc": 0.8291877434734578,
+      "err_aupr": 0.4681543880112254,
+      "succ_aupr": 0.9699925466175614
+    },
+    "pred_entropy": {
+      "auroc": 0.9239100961538462,
+      "aupr": 0.9348513478662932,
+      "fpr_at_95tpr": 0.3915,
+      "err_auroc": 0.8248037676609106,
+      "err_aupr": 0.44541494835735573,
+      "succ_aupr": 0.9693763270474356
+    },
+    "mutual_info": {
+      "auroc": 0.9317500000000001,
+      "aupr": 0.9422183183933606,
+      "fpr_at_95tpr": 0.3325,
+      "err_auroc": 0.8045095645095645,
+      "err_aupr": 0.40510003136965894,
+      "succ_aupr": 0.9653600452625882
+    },
+    "diff_entropy": {
+      "auroc": 0.9299163461538462,
+      "aupr": 0.9413191273682175,
+      "fpr_at_95tpr": 0.355,
+      "err_auroc": 0.8026257340543055,
+      "err_aupr": 0.3990985133612675,
+      "succ_aupr": 0.9650662749086388
+    },
+    "neg_alpha0": {
+      "auroc": 0.9316817307692307,
+      "aupr": 0.9420444060472875,
+      "fpr_at_95tpr": 0.332,
+      "err_auroc": 0.8049584278155706,
+      "err_aupr": 0.40664123993798185,
+      "succ_aupr": 0.9654145431339284
+    },
+    "neg_logp": {
+      "auroc": 0.9462050480769231,
+      "aupr": 0.9493555150517162,
+      "fpr_at_95tpr": 0.2525,
+      "err_auroc": 0.7420082562939706,
+      "err_aupr": 0.33008014912623906,
+      "succ_aupr": 0.9394320761126376
+    }
+  },
+  "thresholded": {
+    "score": "vacuity",
+    "threshold": 0.052543189376592636,
+    "oos_recall": 0.7028846153846153,
+    "id_reject_rate": 0.0455
+  },
+  "arm": "edl",
+  "seed": 3,
+  "tag": "",
+  "best_val_acc": 0.8930942895086321,
+  "wall_clock_sec": 1151.0,
+  "config": {
+    "dataset": "banking77_oos",
+    "data_dir": "data/BANKING77-OOS",
+    "model_name": "bert-base-uncased",
+    "max_length": 64,
+    "batch_size": 32,
+    "eval_batch_size": 128,
+    "num_workers": 0,
+    "feat_dim": 256,
+    "sn_bottleneck": true,
+    "bottleneck_activation": "none",
+    "pooling": "cls",
+    "dropout": 0.1,
+    "arm": "edl",
+    "epochs": 5,
+    "lr_encoder": 2e-05,
+    "lr_head": 0.001,
+    "weight_decay": 0.01,
+    "warmup_frac": 0.1,
+    "grad_clip": 1.0,
+    "reg_param": 0.001,
+    "kl_anneal_epochs": 5,
+    "edl_loss": "digamma",
+    "kl_schedule": "anneal",
+    "alpha_eps": 1e-06,
+    "logit_clamp": 15.0,
+    "gda": {
+      "cov_mode": "tied",
+      "pca_dim": 128,
+      "whiten": true,
+      "jitter_grid": [
+        1e-06,
+        1e-05,
+        0.0001,
+        0.001
+      ],
+      "min_var": 1e-08
+    },
+    "normalizer": "qsigmoid",
+    "combine_mode": "mul",
+    "lam": 5.0,
+    "seed": 3,
+    "tag": "",
+    "device": "mps",
+    "output_dir": "results_b77/edl_seed3",
+    "primary_score": null
+  },
+  "run_id": "edl_seed3_2026-10-22T10-18",
+  "git_sha": "eb040dd",
+  "config_hash": "24ad447fca8d",
+  "diagnostics_file": "diagnostics.json"
+}

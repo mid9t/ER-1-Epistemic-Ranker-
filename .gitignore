@@ -21,11 +21,11 @@ env/
 .ruff_cache/
 .cache/
 
-# Data / outputs
+# Local datasets and float caches. Published tables under results/ and
+# results_b77/ stay in the tree (see VERIFICATION.md).
 /data/
 notebooks/data/
-results/
-!results/.gitkeep
+*.npz
 
 # HuggingFace / model caches
 .cache/
