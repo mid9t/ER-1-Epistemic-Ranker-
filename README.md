@@ -16,31 +16,31 @@ Shared BERT encoder, spectrally-normalized bottleneck, then three arms
 ![End-to-end CLINC150 BERT SN-EDL pipeline with CE, EDL, and DAEDL arms](figs/clinc150_bert_sn_edl_end_to_end_pipeline.png)
 
 CLINC150 text is tokenized and passed through BERT (`[CLS]` + dropout), an
-SN linear bottleneck \(768\to256\) producing features \(\mathbf{f}\), and a
-linear head \(256\to K\) producing logits \(\mathbf{z}\). ID loaders drive
-training; OOS loaders (label = \(-1\)) are used only at val/test. The arms
+SN linear bottleneck $768\to256$ producing features $\mathbf{f}$, and a
+linear head $256\to K$ producing logits $\mathbf{z}$. ID loaders drive
+training; OOS loaders (label = $-1$) are used only at val/test. The arms
 then diverge:
 
-- **CE** trains with cross-entropy on \(\mathbf{z}\)
-- **EDL** maps logits to Dirichlet evidence \(\alpha = \varepsilon + \exp(z)\)
+- **CE** trains with cross-entropy on $\mathbf{z}$
+- **EDL** maps logits to Dirichlet evidence $\alpha = \varepsilon + \exp(z)$
 - **DAEDL** reuses the EDL weights and scales evidence by a GDA density
-  \(\hat{p}(\mathbf{f})\) at inference
+  $\hat{p}(\mathbf{f})$ at inference
 
-Prediction is \(\hat{y} = \arg\max\); OOS scores use a single convention
+Prediction is $\hat{y} = \arg\max$; OOS scores use a single convention
 (higher = more OOS).
 
 ## The bug story, and what we found
 
 Density-aware evidential models (DAEDL) scale Dirichlet evidence by a
-feature-space density \(\hat{p}(x)\). On our CIFAR replication, that term
+feature-space density $\hat{p}(x)$. On our CIFAR replication, that term
 could look healthy in the code path while doing almost nothing: min-max
 normalization squashed ID log-densities into a tiny band near 1, so
-\(\exp(z \odot \hat{p}) \approx \exp(z)\). AUROC still looked fine because
+$\exp(z \odot \hat{p}) \approx \exp(z)$. AUROC still looked fine because
 it was vanilla EDL wearing a costume. We call that failure mode **INERT**.
 
 This repo treats that as a first-class bug class. Every DAEDL run writes
 `diagnostics.json` with a **materiality gate** (rank correlation of
-\(\alpha_0\), relative \(\Delta\alpha_0\), prediction flip-rate). Configs
+$\alpha_0$, relative $\Delta\alpha_0$, prediction flip-rate). Configs
 marked `density_effect: INERT` are disqualified even if AUROC looks good.
 We also redesign normalization for NLP (`qsigmoid` / `ecdf`, not only
 min-max), default to tied-covariance GDA with PCA+whitening on BERT
@@ -48,7 +48,7 @@ features, and keep a single score convention: **higher = more OOS**.
 
 ### Milestone 1 results (CLINC150-plus, 5 seeds)
 
-BERT-base, SN bottleneck \(768\to256\), 5 epochs. Mean of five seeds.
+BERT-base, SN bottleneck $768\to256$, 5 epochs. Mean of five seeds.
 Table 1 groups the detectors into CE scores, EDL scores and densities, and
 couplings. A dash means that cell was not reported. Entries marked ≈ come
 from fusion results that were stored as differences.
@@ -87,7 +87,7 @@ under every normalizer. `mul` raises it to 0.055 (minmax), 0.159
 ![Figure 2. CLINC150 test ECE under vacuity, add_log, and mul](figs/figure2_clinc150_ece.png)
 
 Materiality on the DAEDL seeds is **ACTIVE**: the density moves
-\(\alpha_0\) (median relative change ~0.80). It is not the CIFAR inert
+$\alpha_0$ (median relative change ~0.80). It is not the CIFAR inert
 trap. The source tables are `results/summary.csv` and `results/posthoc/`.
 
 **Takeaway:** on CLINC150, EDL vacuity beats CE MSP at almost the same
@@ -107,7 +107,7 @@ are never loaded. Pooled test OOS is 1,080 same-domain held-out intents
 against the same 2,000 in-scope test utterances. Worst truncation at 64
 tokens was 0.46%. The ±15 logit clamp binds on 0% of in-scope test rows, so
 `energy` and `energy_clip` are the same score. Verdicts use the combined
-interval, SE = √(SE²_boot + s²_seed / 5), and are copied from
+interval, $\mathrm{SE}=\sqrt{\mathrm{SE}^{2}\_{\mathrm{boot}}+s^{2}\_{\mathrm{seed}}/5}$, and are copied from
 `results_b77/posthoc/verdicts/verdicts.md`.
 
 In-scope accuracy is 0.875 (CE) versus 0.879 (EDL). It is lower than
