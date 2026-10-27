@@ -1,0 +1,56 @@
+{
+  "dataset": "banking77_oos",
+  "model_name": "bert-base-uncased",
+  "max_length": 64,
+  "data_dir": "data/BANKING77-OOS",
+  "sizes": {
+    "train": 5905,
+    "val": 1506,
+    "test": 2000,
+    "oos_val": 730,
+    "oos_test": 2080
+  },
+  "split_counts": {
+    "train": 5905,
+    "valid": 1506,
+    "test": 2000,
+    "id_oos_train": 2062,
+    "id_oos_valid": 530,
+    "id_oos_test": 1080,
+    "ood_oos_valid": 200,
+    "ood_oos_test": 1000
+  },
+  "expected": {
+    "train": 5905,
+    "valid": 1506,
+    "test": 2000,
+    "id_oos_train": 2062,
+    "id_oos_valid": 530,
+    "id_oos_test": 1080,
+    "ood_oos_valid": 200,
+    "ood_oos_test": 1000
+  },
+  "n_intents": 50,
+  "n_held_out": 27,
+  "n_empty": {
+    "train": 2,
+    "valid": 0,
+    "test": 0,
+    "id_oos_train": 8,
+    "id_oos_valid": 2,
+    "id_oos_test": 4,
+    "ood_oos_valid": 0,
+    "ood_oos_test": 0
+  },
+  "truncation": {
+    "train": 0.00270956816257409,
+    "val": 0.004648074369189907,
+    "test": 0.0025,
+    "oos_val": 0.0027397260273972603,
+    "oos_test": 0.0
+  },
+  "worst_split": "val",
+  "worst_truncation": 0.004648074369189907,
+  "stop": false,
+  "message": "data check passed"
+}

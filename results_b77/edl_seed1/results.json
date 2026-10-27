@@ -1,0 +1,148 @@
+{
+  "in_scope_acc": 0.8795,
+  "ece": 0.031850200265645966,
+  "per_score": {
+    "msp": {
+      "auroc": 0.9134810096153847,
+      "aupr": 0.9217542552288395,
+      "fpr_at_95tpr": 0.385,
+      "err_auroc": 0.8323028691801971,
+      "err_aupr": 0.4474582008202305,
+      "succ_aupr": 0.9718394465790348
+    },
+    "entropy": {
+      "auroc": 0.9222223557692307,
+      "aupr": 0.9325006821961017,
+      "fpr_at_95tpr": 0.3605,
+      "err_auroc": 0.8294367556066136,
+      "err_aupr": 0.4221423342586735,
+      "succ_aupr": 0.9714656850080563
+    },
+    "energy": {
+      "auroc": 0.9320961538461537,
+      "aupr": 0.9409258988313597,
+      "fpr_at_95tpr": 0.293,
+      "err_auroc": 0.812792066408913,
+      "err_aupr": 0.3918447622441974,
+      "succ_aupr": 0.9681949917987275
+    },
+    "vacuity": {
+      "auroc": 0.9320961538461537,
+      "aupr": 0.9409258988313597,
+      "fpr_at_95tpr": 0.293,
+      "err_auroc": 0.812792066408913,
+      "err_aupr": 0.39184476224419734,
+      "succ_aupr": 0.9681949722350496
+    },
+    "one_minus_maxpbar": {
+      "auroc": 0.9134810096153847,
+      "aupr": 0.9217542552288395,
+      "fpr_at_95tpr": 0.385,
+      "err_auroc": 0.832302869180197,
+      "err_aupr": 0.44745820082023047,
+      "succ_aupr": 0.9718394465790348
+    },
+    "pred_entropy": {
+      "auroc": 0.9222223557692307,
+      "aupr": 0.9325006821961017,
+      "fpr_at_95tpr": 0.3605,
+      "err_auroc": 0.8294367556066136,
+      "err_aupr": 0.4221423342586735,
+      "succ_aupr": 0.9714656850080563
+    },
+    "mutual_info": {
+      "auroc": 0.9318222355769231,
+      "aupr": 0.940807849734859,
+      "fpr_at_95tpr": 0.2925,
+      "err_auroc": 0.8130232426477699,
+      "err_aupr": 0.39024260149722617,
+      "succ_aupr": 0.9682656513889775
+    },
+    "diff_entropy": {
+      "auroc": 0.9259663461538461,
+      "aupr": 0.936603251568237,
+      "fpr_at_95tpr": 0.3205,
+      "err_auroc": 0.8152866467414766,
+      "err_aupr": 0.3850419897081159,
+      "succ_aupr": 0.9688649320157828
+    },
+    "neg_alpha0": {
+      "auroc": 0.9320961538461537,
+      "aupr": 0.9409258988313597,
+      "fpr_at_95tpr": 0.293,
+      "err_auroc": 0.812792066408913,
+      "err_aupr": 0.39184476224419734,
+      "succ_aupr": 0.9681949722350496
+    },
+    "neg_logp": {
+      "auroc": 0.9367874999999999,
+      "aupr": 0.9425240859447863,
+      "fpr_at_95tpr": 0.2865,
+      "err_auroc": 0.7534930022008921,
+      "err_aupr": 0.32606441202110886,
+      "succ_aupr": 0.9423624593579902
+    }
+  },
+  "thresholded": {
+    "score": "vacuity",
+    "threshold": 0.054451391100883484,
+    "oos_recall": 0.6783653846153846,
+    "id_reject_rate": 0.05
+  },
+  "arm": "edl",
+  "seed": 1,
+  "tag": "",
+  "best_val_acc": 0.900398406374502,
+  "wall_clock_sec": 1135.6,
+  "config": {
+    "dataset": "banking77_oos",
+    "data_dir": "data/BANKING77-OOS",
+    "model_name": "bert-base-uncased",
+    "max_length": 64,
+    "batch_size": 32,
+    "eval_batch_size": 128,
+    "num_workers": 0,
+    "feat_dim": 256,
+    "sn_bottleneck": true,
+    "bottleneck_activation": "none",
+    "pooling": "cls",
+    "dropout": 0.1,
+    "arm": "edl",
+    "epochs": 5,
+    "lr_encoder": 2e-05,
+    "lr_head": 0.001,
+    "weight_decay": 0.01,
+    "warmup_frac": 0.1,
+    "grad_clip": 1.0,
+    "reg_param": 0.001,
+    "kl_anneal_epochs": 5,
+    "edl_loss": "digamma",
+    "kl_schedule": "anneal",
+    "alpha_eps": 1e-06,
+    "logit_clamp": 15.0,
+    "gda": {
+      "cov_mode": "tied",
+      "pca_dim": 128,
+      "whiten": true,
+      "jitter_grid": [
+        1e-06,
+        1e-05,
+        0.0001,
+        0.001
+      ],
+      "min_var": 1e-08
+    },
+    "normalizer": "qsigmoid",
+    "combine_mode": "mul",
+    "lam": 5.0,
+    "seed": 1,
+    "tag": "",
+    "device": "mps",
+    "output_dir": "results_b77/edl_seed1",
+    "primary_score": null
+  },
+  "run_id": "edl_seed1_2026-10-22T09-38",
+  "git_sha": "eb040dd",
+  "config_hash": "6dafc6fee457",
+  "diagnostics_file": "diagnostics.json"
+}

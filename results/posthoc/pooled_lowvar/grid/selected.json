@@ -1,0 +1,27 @@
+{
+  "spec": "daedl:qsigmoid:mul/vacuity",
+  "normalizer": "qsigmoid",
+  "combine_mode": "mul",
+  "lam": null,
+  "val_auroc_mean": 0.9791766666666668,
+  "val_auroc_std": 0.00189663591070552,
+  "test_auroc_mean": 0.9768002222222222,
+  "test_auroc_std": 0.0005441672083259699,
+  "test_delta_vs_vacuity": 0.0010351555555555552,
+  "lam_on_grid_edge": false,
+  "n_seeds": 5,
+  "runners_up": [
+    {
+      "spec": "daedl:minmax:add_log:10/vacuity",
+      "val_auroc_mean": 0.97869
+    },
+    {
+      "spec": "daedl:ecdf:add_log:10/vacuity",
+      "val_auroc_mean": 0.9784546666666666
+    },
+    {
+      "spec": "daedl:qsigmoid:add_log:10/vacuity",
+      "val_auroc_mean": 0.9782819999999999
+    }
+  ]
+}

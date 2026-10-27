@@ -1,0 +1,2 @@
+comparison,score_a,score_b,seeds,n_seeds,auroc_a,auroc_b,delta,per_seed_delta,per_seed_delta_std,ci_low,ci_high,se,p
+"MSE, annealed KL - main: vacuity",vacuity,vacuity,0 1 2,3,0.9759904444444446,0.9754877777777778,0.0005026666666667253,-0.000105 0.000832 0.000781,0.0005271632445645931,-0.00038468888888891956,0.0014847407407407134,0.00047159198689755846,0.278

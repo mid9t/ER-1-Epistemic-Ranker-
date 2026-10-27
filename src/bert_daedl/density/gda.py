@@ -64,18 +64,34 @@ class GaussianDensityModel:
     def _transform(self, feats):
         return (np.asarray(feats, np.float64) - self.mean_) @ self.T_
 
+    def class_sq_mahalanobis(self, feats) -> np.ndarray:
+        """(N, C) squared Mahalanobis distance to each class mean.
+
+        Tied covariance whitens every point and every mean with one
+        triangular solve each. That matches the per-class loop to ~1e-15
+        and avoids repeating the factorization.
+        """
+        Z = self._transform(feats)
+        n, c = len(Z), len(self.classes_)
+        if self.cfg.cov_mode == "tied":
+            zw = solve_triangular(self.chol_, Z.T, lower=True).T
+            muw = solve_triangular(self.chol_, self.mu_.T, lower=True).T
+            diff = zw[:, None, :] - muw[None, :, :]
+            return np.sum(diff * diff, axis=-1)
+        out = np.empty((n, c))
+        for i in range(c):
+            sol = solve_triangular(self.chol_[i], (Z - self.mu_[i]).T, lower=True)
+            out[:, i] = np.sum(sol * sol, axis=0)
+        return out
+
     def class_log_prob(self, feats) -> np.ndarray:
         """(N, C) log-density per class."""
-        Z = self._transform(feats)
-        C = len(self.classes_)
-        out = np.empty((len(Z), C))
+        sq = self.class_sq_mahalanobis(feats)
         const = self.k_ * np.log(2.0 * np.pi)
-        for i in range(C):
-            L = self.chol_ if self.cfg.cov_mode == "tied" else self.chol_[i]
-            ld = self.logdet_ if self.cfg.cov_mode == "tied" else self.logdet_[i]
-            sol = solve_triangular(L, (Z - self.mu_[i]).T, lower=True)
-            out[:, i] = -0.5 * (const + ld + (sol ** 2).sum(0))
-        return out
+        if self.cfg.cov_mode == "tied":
+            return -0.5 * (const + self.logdet_ + sq)
+        ld = np.asarray(self.logdet_, dtype=np.float64)
+        return -0.5 * (const + ld[None, :] + sq)
 
     def marginal_log_prob(self, feats) -> np.ndarray:
         lp = self.class_log_prob(feats)

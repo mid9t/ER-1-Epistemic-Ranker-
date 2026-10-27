@@ -14,6 +14,8 @@ class GDAConfig:
 @dataclass
 class ExperimentConfig:
     # data
+    dataset: str = "clinc150"  # "clinc150" | "banking77_oos"
+    data_dir: Optional[str] = None
     model_name: str = "bert-base-uncased"
     max_length: int = 64
     batch_size: int = 32
@@ -36,6 +38,8 @@ class ExperimentConfig:
     # EDL — mirror validated DAEDL/ CIFAR run (EXP param + annealed KL)
     reg_param: float = 1e-3
     kl_anneal_epochs: int = 5  # = epochs
+    edl_loss: str = "digamma"  # "digamma" | "mse"
+    kl_schedule: str = "anneal"  # "anneal" | "constant"
     alpha_eps: float = 1e-6
     logit_clamp: float = 15.0
     # density
@@ -45,6 +49,7 @@ class ExperimentConfig:
     lam: float = 5.0  # add_log strength
     # bookkeeping
     seed: int = 0
+    tag: str = ""
     device: str = "cuda"
     output_dir: str = "results"
     primary_score: Optional[str] = None

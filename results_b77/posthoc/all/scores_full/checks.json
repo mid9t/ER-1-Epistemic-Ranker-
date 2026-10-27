@@ -1,0 +1,77 @@
+{
+  "runs": [
+    {
+      "arm": "ce",
+      "seed": 0,
+      "tag": "",
+      "verify_max_gap_exact_scores": 0.019305048076923237
+    },
+    {
+      "arm": "ce",
+      "seed": 1,
+      "tag": "",
+      "verify_max_gap_exact_scores": 0.021897115384615362
+    },
+    {
+      "arm": "ce",
+      "seed": 2,
+      "tag": "",
+      "verify_max_gap_exact_scores": 0.02032812500000003
+    },
+    {
+      "arm": "ce",
+      "seed": 3,
+      "tag": "",
+      "verify_max_gap_exact_scores": 0.017594230769230945
+    },
+    {
+      "arm": "ce",
+      "seed": 4,
+      "tag": "",
+      "verify_max_gap_exact_scores": 0.021270192307692226
+    },
+    {
+      "arm": "edl",
+      "seed": 0,
+      "tag": "",
+      "spearman_vacuity_energy_clip": 1.0,
+      "max_auroc_gap_vacuity_family": 0.0,
+      "verify_max_gap_exact_scores": 0.01756418269230775
+    },
+    {
+      "arm": "edl",
+      "seed": 1,
+      "tag": "",
+      "spearman_vacuity_energy_clip": 1.0,
+      "max_auroc_gap_vacuity_family": 0.0,
+      "verify_max_gap_exact_scores": 0.018129086538461348
+    },
+    {
+      "arm": "edl",
+      "seed": 2,
+      "tag": "",
+      "spearman_vacuity_energy_clip": 1.0,
+      "max_auroc_gap_vacuity_family": 0.0,
+      "verify_max_gap_exact_scores": 0.014835576923076799
+    },
+    {
+      "arm": "edl",
+      "seed": 3,
+      "tag": "",
+      "spearman_vacuity_energy_clip": 1.0,
+      "max_auroc_gap_vacuity_family": 0.0,
+      "verify_max_gap_exact_scores": 0.015934855769230816
+    },
+    {
+      "arm": "edl",
+      "seed": 4,
+      "tag": "",
+      "spearman_vacuity_energy_clip": 1.0,
+      "max_auroc_gap_vacuity_family": 0.0,
+      "verify_max_gap_exact_scores": 0.02072067307692327
+    }
+  ],
+  "verify_max_gap_exact_scores": 0.021897115384615362,
+  "spearman_vacuity_energy_clip_min": 1.0,
+  "max_auroc_gap_vacuity_family": 0.0
+}

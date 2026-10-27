@@ -1,0 +1,100 @@
+{
+  "in_scope_acc": 0.8765,
+  "ece": 0.043289963267743564,
+  "per_score": {
+    "msp": {
+      "auroc": 0.9073596153846155,
+      "aupr": 0.9147398678627244,
+      "fpr_at_95tpr": 0.4305,
+      "err_auroc": 0.8277215923656612,
+      "err_aupr": 0.4631305309387053,
+      "succ_aupr": 0.9696383762856584
+    },
+    "entropy": {
+      "auroc": 0.9181497596153847,
+      "aupr": 0.9292924210255125,
+      "fpr_at_95tpr": 0.3955,
+      "err_auroc": 0.8269594518130862,
+      "err_aupr": 0.4512390694881374,
+      "succ_aupr": 0.9696008755376827
+    },
+    "energy": {
+      "auroc": 0.9279733173076923,
+      "aupr": 0.9387850909553005,
+      "fpr_at_95tpr": 0.365,
+      "err_auroc": 0.7991967500479225,
+      "err_aupr": 0.3870714530551038,
+      "succ_aupr": 0.9642623984853875
+    },
+    "neg_logp": {
+      "auroc": 0.9469699519230769,
+      "aupr": 0.9519653880608895,
+      "fpr_at_95tpr": 0.254,
+      "err_auroc": 0.735756632354945,
+      "err_aupr": 0.29704508773025023,
+      "succ_aupr": 0.9365095254446452
+    }
+  },
+  "thresholded": {
+    "score": "msp",
+    "threshold": 0.4656749367713928,
+    "oos_recall": 0.6028846153846154,
+    "id_reject_rate": 0.044
+  },
+  "arm": "ce",
+  "seed": 4,
+  "tag": "",
+  "best_val_acc": 0.8957503320053121,
+  "wall_clock_sec": 1123.2,
+  "config": {
+    "dataset": "banking77_oos",
+    "data_dir": "data/BANKING77-OOS",
+    "model_name": "bert-base-uncased",
+    "max_length": 64,
+    "batch_size": 32,
+    "eval_batch_size": 128,
+    "num_workers": 0,
+    "feat_dim": 256,
+    "sn_bottleneck": true,
+    "bottleneck_activation": "none",
+    "pooling": "cls",
+    "dropout": 0.1,
+    "arm": "ce",
+    "epochs": 5,
+    "lr_encoder": 2e-05,
+    "lr_head": 0.001,
+    "weight_decay": 0.01,
+    "warmup_frac": 0.1,
+    "grad_clip": 1.0,
+    "reg_param": 0.001,
+    "kl_anneal_epochs": 5,
+    "edl_loss": "digamma",
+    "kl_schedule": "anneal",
+    "alpha_eps": 1e-06,
+    "logit_clamp": 15.0,
+    "gda": {
+      "cov_mode": "tied",
+      "pca_dim": 128,
+      "whiten": true,
+      "jitter_grid": [
+        1e-06,
+        1e-05,
+        0.0001,
+        0.001
+      ],
+      "min_var": 1e-08
+    },
+    "normalizer": "qsigmoid",
+    "combine_mode": "mul",
+    "lam": 5.0,
+    "seed": 4,
+    "tag": "",
+    "device": "mps",
+    "output_dir": "results_b77/ce_seed4",
+    "primary_score": null
+  },
+  "run_id": "ce_seed4_2026-10-22T08-58",
+  "git_sha": "eb040dd",
+  "config_hash": "dfa012a8cbe5",
+  "diagnostics_file": "diagnostics.json"
+}

@@ -1,0 +1,20 @@
+| spec | val AUROC | test AUROC | Δ vs vacuity |
+|---|---:|---:|---:|
+| daedl:ecdf:add_log:40/vacuity | 0.9766 ± 0.0000 | 0.9750 ± 0.0004 | -0.0007 |
+| daedl:ecdf:add_log:20/vacuity | 0.9766 ± 0.0000 | 0.9753 ± 0.0004 | -0.0005 |
+| daedl:ecdf:add_log:80/vacuity | 0.9766 ± 0.0000 | 0.9747 ± 0.0005 | -0.0010 |
+| daedl:ecdf:add_log:10/vacuity | 0.9765 ± 0.0000 | 0.9756 ± 0.0005 | -0.0002 |
+| daedl:ecdf:add_log:160/vacuity | 0.9765 ± 0.0000 | 0.9744 ± 0.0005 | -0.0013 |
+| daedl:qsigmoid:add_log:40/vacuity | 0.9761 ± 0.0000 | 0.9743 ± 0.0007 | -0.0015 |
+| daedl:qsigmoid:add_log:80/vacuity | 0.9761 ± 0.0000 | 0.9740 ± 0.0008 | -0.0017 |
+| daedl:qsigmoid:add_log:20/vacuity | 0.9760 ± 0.0000 | 0.9746 ± 0.0006 | -0.0012 |
+| daedl:qsigmoid:add_log:160/vacuity | 0.9760 ± 0.0000 | 0.9738 ± 0.0009 | -0.0020 |
+| daedl:qsigmoid:add_log:10/vacuity | 0.9757 ± 0.0000 | 0.9750 ± 0.0007 | -0.0008 |
+| daedl:minmax:add_log:160/vacuity | 0.9748 ± 0.0000 | 0.9717 ± 0.0007 | -0.0041 |
+| daedl:minmax:add_log:80/vacuity | 0.9748 ± 0.0000 | 0.9719 ± 0.0007 | -0.0039 |
+| daedl:minmax:add_log:40/vacuity | 0.9748 ± 0.0000 | 0.9723 ± 0.0006 | -0.0035 |
+| daedl:minmax:add_log:20/vacuity | 0.9747 ± 0.0000 | 0.9729 ± 0.0006 | -0.0029 |
+| daedl:minmax:add_log:10/vacuity | 0.9746 ± 0.0000 | 0.9737 ± 0.0007 | -0.0021 |
+| daedl:qsigmoid:mul/vacuity | 0.9737 ± 0.0000 | 0.9711 ± 0.0007 | -0.0047 |
+| daedl:ecdf:mul/vacuity | 0.9733 ± 0.0000 | 0.9692 ± 0.0008 | -0.0066 |
+| daedl:minmax:mul/vacuity | 0.9733 ± 0.0000 | 0.9716 ± 0.0008 | -0.0041 |
