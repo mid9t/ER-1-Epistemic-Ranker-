@@ -48,30 +48,53 @@ features, and keep a single score convention: **higher = more OOS**.
 
 ### Milestone 1 results (CLINC150-plus, 5 seeds)
 
-BERT-base, SN bottleneck \(768\to256\), 5 epochs. Primary scores: CE=`msp`,
-EDL=`vacuity`, DAEDL=`daedl_vacuity` (`qsigmoid` × `mul`).
+BERT-base, SN bottleneck \(768\to256\), 5 epochs. Mean of five seeds.
+Table 1 groups the detectors into CE scores, EDL scores and densities, and
+couplings. A dash means that cell was not reported. Entries marked ≈ come
+from fusion results that were stored as differences.
 
-| Arm | In-scope acc | Primary OOS AUROC | FPR@95 |
-|-----|-------------:|------------------:|-------:|
-| CE | 0.9662 ± 0.0011 | 0.9655 ± 0.0009 | 0.129 ± 0.005 |
-| EDL | 0.9653 ± 0.0009 | **0.9763 ± 0.0005** | **0.101 ± 0.005** |
-| DAEDL | 0.9654 ± 0.0008 | 0.9713 ± 0.0005 | 0.115 ± 0.003 |
+![Table 1. CLINC150 test results: AUROC, FPR@95, and ECE for CE, EDL, densities, and couplings](figs/table1_clinc150_results.png)
 
-House CE baselines (same runs): energy **0.979**, Mahalanobis (`neg_logp`)
-**0.974**, MSP 0.966. Raw GDA density alone separates OOS strongly
-(val AUROC ~0.97–0.98). Materiality on DAEDL seeds is **ACTIVE** (not the
-CIFAR inert trap): density moves \(\alpha_0\) (median relative change ~0.80),
-but `daedl_vacuity` still underperforms plain EDL vacuity by ~0.5 pts AUROC
-and fails the inclusion gate (lift must exceed seed noise).
+CE energy is the strongest logit score (AUROC 0.9794, FPR@95 0.092). EDL
+vacuity is close on detection (0.9758) and better calibrated (ECE 0.011
+versus 0.017). Logistic fusion of CE energy with the full `[CLS]` density
+is about 0.980. The default multiplicative coupling, `qsigmoid` × mul on
+the bottleneck density, drops to 0.9711 AUROC and raises ECE to 0.159.
+Additive coupling leaves the predictive probabilities unchanged, so its ECE
+stays at the vacuity value 0.011. The validation-selected additive rule
+(`ecdf`, λ = 40, D_port) does not beat vacuity.
 
-**Takeaway:** on CLINC150, EDL vacuity beats CE MSP with almost no accuracy
-cost. The default density coupling (`qsigmoid` × `mul`) moves evidence and
-still loses to plain vacuity, so that study keeps DAEDL as a diagnosed
-negative rather than a silent no-op. The Banking77-OOS replication below
-does not carry the energy-over-vacuity ranking, and it does find one
-pre-registered coupling that helps.
+Figure 1 is the same comparison as paired differences. The grey band is the
+±0.001 neutral zone. The `add_log` row on D_full is exploratory, which is
+why it is marked with an asterisk.
 
-Numbers above are from `results/summary.csv` (seeds 0–4).
+![Figure 1. CLINC150 headline AUROC differences with 95% intervals](figs/figure1_clinc150_differences.png)
+
+Vacuity beats CE MSP by about +0.010. CE energy beats vacuity by about
++0.0036. Multiplicative `qsigmoid` coupling on D_port loses about 0.0047.
+The selected additive coupling on D_port is inside the neutral band.
+
+The asterisked D_full `add_log` interval is a seed-level *t* interval, not
+the paired bootstrap used for the other rows, so it is not strictly
+comparable. The figure footnote records that. A bootstrap for that one
+contrast has not been substituted yet.
+
+Figure 2 is why the multiplicative rule is a diagnosed negative even when
+AUROC only moves a little. Test ECE is 0.011 for vacuity and for `add_log`
+under every normalizer. `mul` raises it to 0.055 (minmax), 0.159
+(qsigmoid), and 0.530 (ecdf).
+
+![Figure 2. CLINC150 test ECE under vacuity, add_log, and mul](figs/figure2_clinc150_ece.png)
+
+Materiality on the DAEDL seeds is **ACTIVE**: the density moves
+\(\alpha_0\) (median relative change ~0.80). It is not the CIFAR inert
+trap. The source tables are `results/summary.csv` and `results/posthoc/`.
+
+**Takeaway:** on CLINC150, EDL vacuity beats CE MSP at almost the same
+accuracy, and CE energy is the best simple detector. Multiplicative density
+scaling is measurable and it wrecks calibration. Additive scaling keeps
+calibration and does not improve detection. The Banking77-OOS replication
+below does not carry the energy-over-vacuity ranking.
 
 ## Banking77-OOS replication (BERT-base, 5 seeds)
 
@@ -87,33 +110,52 @@ tokens was 0.46%. The ±15 logit clamp binds on 0% of in-scope test rows, so
 interval, SE = √(SE²_boot + s²_seed / 5), and are copied from
 `results_b77/posthoc/verdicts/verdicts.md`.
 
-In-scope accuracy is lower than CLINC150 because the task is 50 banking
-intents, not because a seed collapsed. Every seed is within half a point of
-its arm mean.
+In-scope accuracy is 0.875 (CE) versus 0.879 (EDL). It is lower than
+CLINC150 because the task is 50 banking intents, not because a seed
+collapsed. Every seed is within half a point of its arm mean.
 
-| Arm | In-scope acc | ECE |
-|-----|-------------:|----:|
-| CE | 0.8748 ± 0.0032 | 0.0406 ± 0.0028 |
-| EDL | 0.8790 ± 0.0019 | 0.0342 ± 0.0034 |
+Table 2 is the pooled test set. `D_port` is the 256-d bottleneck with PCA
+to 128. `D_full` is the 768-d `[CLS]` vector with no PCA. Values marked ≈
+were recovered from reported differences. The bottleneck density alone is
+the strongest detector in the table (AUROC about 0.942, FPR@95 0.27).
+Vacuity is about 0.931 and better calibrated than CE energy (ECE 0.034
+versus 0.041). The pre-registered D_full pick, `ecdf` add_log at λ = 5,
+reaches 0.935 while keeping that ECE. Multiplicative `ecdf` on D_port
+reaches 0.943 and pushes ECE to 0.39. The secondary D_port pick, `ecdf`
+add_log at λ = 80, reaches 0.944 and leaves ECE at 0.034.
 
-Pooled OOS AUROC (mean ± sample std over seeds 0–4). `D_port` is the 256-d
-bottleneck with PCA to 128. `D_full` is the 768-d `[CLS]` vector with no PCA.
+![Table 2. Banking77-OOS pooled test results](figs/table2_banking77_results.png)
 
-| Score | CE | EDL |
-|-------|---:|----:|
-| MSP | 0.9046 ± 0.0052 | 0.9138 ± 0.0035 |
-| energy / vacuity | 0.9270 ± 0.0038 | 0.9310 ± 0.0020 |
-| `neg_logp` on D_port | 0.9423 ± 0.0045 | 0.9425 ± 0.0042 |
-| `neg_logp` on D_full | 0.9222 ± 0.0055 | 0.9250 ± 0.0047 |
-| selected D_full, `ecdf` add_log λ=5 | — | 0.9346 ± 0.0025 |
-| selected D_port, `ecdf` × mul | — | 0.9429 ± 0.0036 |
+Figure 3 splits three comparisons into pooled OOS, near-OOS (held-out
+banking intents), and far-OOS (CLINC-sourced, other domains). Positive
+means the score on the left detects OOS better. The two densities are
+mirror images: the bottleneck density gains on near-OOS (+0.0242) and is
+flat to slightly worse on far-OOS (−0.0024), while the full `[CLS]` density
+loses on near-OOS (−0.0153) and gains on far-OOS (+0.0040). Vacuity’s edge
+over CE energy is small on every slice (+0.0040 pooled, +0.0068 near,
++0.0010 far).
 
-EDL vacuity by OOS subset, same in-scope test set: ID-OOS
-0.8746 ± 0.0033, OOD-OOS 0.9919 ± 0.0007, pooled 0.9310 ± 0.0020.
-Held-out banking intents sit much closer to in-scope confidence than the
-CLINC-sourced OOD-OOS rows.
+![Figure 3. Banking77-OOS AUROC differences on pooled, near-OOS, and far-OOS](figs/figure3_banking77_mirror.png)
 
-Pre-registered decisions on pooled test OOS:
+Figure 3 has no error bars. The near-OOS and far-OOS heights are seed
+means. Interval estimates for those bars are not in the notes yet, so the
+plot shows the sign and the size of the mean difference only.
+
+Held-out banking intents remain the hard slice for the logit scores
+themselves: EDL vacuity is 0.8746 ± 0.0033 on ID-OOS and 0.9919 ± 0.0007
+on OOD-OOS, against the same 2,000 in-scope test utterances.
+
+Table 3 puts the two benchmarks on the same questions. Multiplicative
+coupling on D_port hurts CLINC150 (−0.0047) and helps Banking77 (+0.0105).
+ECE under `qsigmoid` × mul jumps from 0.011 to 0.159 on CLINC150 and from
+0.034 into the 0.097–0.159 range on Banking77. Validation and test agree on
+the sign of the effect in 40% of cells when the validation OOS set has 100
+utterances (CLINC150) and in 84% when it has 730 (Banking77).
+
+![Table 3. The same questions on CLINC150 and Banking77-OOS](figs/table3_benchmark_comparison.png)
+
+Pre-registered decisions on pooled Banking77 test OOS, with the combined
+interval rather than the rounded cells in Table 3:
 
 | Claim | Verdict | Estimate | Combined 95% CI |
 |-------|---------|---------:|-----------------|
