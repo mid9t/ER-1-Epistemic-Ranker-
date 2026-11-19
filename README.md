@@ -1,12 +1,9 @@
 # Epistemic Ranker — Evidential BERT on CLINC150 and Banking77-OOS
 
-Milestone 1: leak-free CLINC150 pipeline and three experiment arms
-(**CE**, **vanilla EDL**, **DAEDL-style density-scaled EDL**) with diagnostics
-that catch an inert density term. A pre-registered Banking77-OOS replication
-(BERT-base, same head and recipe) is recorded below.
-
-See [`bert_edl_clinc150_implementation_plan.md`](bert_edl_clinc150_implementation_plan.md)
-for the full design. Early-exit heads are deferred to Milestone 2.
+BERT-base comparison of cross-entropy, evidential deep learning, and
+density-scaled evidential scores on CLINC150, with the same head and recipe
+replicated on Banking77-OOS under rules frozen in
+[`PREREGISTRATION.md`](PREREGISTRATION.md).
 
 ## Overview architecture
 
@@ -46,7 +43,7 @@ We also redesign normalization for NLP (`qsigmoid` / `ecdf`, not only
 min-max), default to tied-covariance GDA with PCA+whitening on BERT
 features, and keep a single score convention: **higher = more OOS**.
 
-### Milestone 1 results (CLINC150-plus, 5 seeds)
+### CLINC150-plus (5 seeds)
 
 BERT-base, SN bottleneck $768\to256$, 5 epochs. Mean of five seeds.
 Table 1 groups the detectors into CE scores, EDL scores and densities, and
@@ -76,8 +73,7 @@ The selected additive coupling on D_port is inside the neutral band.
 
 The asterisked D_full `add_log` interval is a seed-level *t* interval, not
 the paired bootstrap used for the other rows, so it is not strictly
-comparable. The figure footnote records that. A bootstrap for that one
-contrast has not been substituted yet.
+comparable. The figure footnote records that.
 
 Figure 2 is why the multiplicative rule is a diagnosed negative even when
 AUROC only moves a little. Test ECE is 0.011 for vacuity and for `add_log`
@@ -138,8 +134,7 @@ over CE energy is small on every slice (+0.0040 pooled, +0.0068 near,
 ![Figure 3. Banking77-OOS AUROC differences on pooled, near-OOS, and far-OOS](figs/figure3_banking77_mirror.png)
 
 Figure 3 has no error bars. The near-OOS and far-OOS heights are seed
-means. Interval estimates for those bars are not in the notes yet, so the
-plot shows the sign and the size of the mean difference only.
+means, so the plot shows the sign and the size of the mean difference only.
 
 Held-out banking intents remain the hard slice for the logit scores
 themselves: EDL vacuity is 0.8746 ± 0.0033 on ID-OOS and 0.9919 ± 0.0007
@@ -191,9 +186,9 @@ ID-OOS and +0.08 points on OOD-OOS (difference +0.53 points). The 95%
 interval includes zero, and Holm does not reject (adjusted p = 0.075).
 The near-OOS mechanism stays an observation, not a confirmed claim.
 
-RoBERTa-base on CLINC150 is specified in the pre-registration and has not
-been run. The RoBERTa × Banking77 cross is only required if that study
-disagrees with these H1 or H2 verdicts.
+The reported study is this BERT-base comparison. RoBERTa-base, specified in
+the pre-registration, was not run, so the RoBERTa × Banking77 cross is
+outside these results.
 
 ## Layout
 
